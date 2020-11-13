@@ -29,3 +29,7 @@ def index_view(request,parent_or_child=None,pk=None):
         'products/index.html',
         {'categories':categories,'products':products}
     )
+
+
+def login(request):
+    return render(request , 'products/login.html')   
