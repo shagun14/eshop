@@ -94,7 +94,7 @@
                             <li><a href="my-account.html">My Account</a></li>
                             <li><a href="#">Our location</a></li>
                             <li><a href="#">Contact Us</a></li>
-                            <li><a href="{% url 'login' %}">Log in</a></li>
+                            <li><a href="{% url 'login' %}">Log in/Register</a></li>
                         </ul>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
     <p class="card-text"><b>{{ product.price}}</b></p>
     <form action="/" method="POST"></form>
     {% csrf_token %}
-    <input  type="text" name= 'product' value={{product.id}}>
+    <input hidden  type="text" name='product' value={{product.id}}>
     <input type="submit" class="btn btn-light border btn-sm" value="Add To Cart"> 
   </div>
 </div>
