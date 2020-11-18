@@ -1,34 +1,43 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Category,SubCategory,Product
+from django.views import View 
 
-def index_view(request,parent_or_child=None,pk=None):
-    categories=Category.objects.filter(parent=None)
 
-    if parent_or_child is None:
-        products=Product.objects.all()
-    elif parent_or_child=='child':
-        sub_cat=SubCategory.objects.get(pk=pk)
-        products=sub_cat.product_set.all()
+class index(View):
+    def post(self, request):
+        product=request.POST.get('product')
+        print(product)
 
-    elif parent_or_child=='parent':
-        products=[]
-        sub_cats=Category.objects.get(pk=pk).children.all()
 
-        for sub_cat in sub_cats:
-            prds=sub_cat.product_set.all()
-            products +=prds
 
-    else:
-        products=[]
+    def get(self,request,parent_or_child=None,pk=None):
+        categories=Category.objects.filter(parent=None)
 
-    return  render(
-        request,
-        'products/index.html',
-        {'categories':categories,'products':products}
-    )
+        if parent_or_child is None:
+            products=Product.objects.all()
+        elif parent_or_child=='child':
+            sub_cat=SubCategory.objects.get(pk=pk)
+            products=sub_cat.product_set.all()
+
+        elif parent_or_child=='parent':
+            products=[]
+            sub_cats=Category.objects.get(pk=pk).children.all()
+
+            for sub_cat in sub_cats:
+                prds=sub_cat.product_set.all()
+                products +=prds
+
+        else:
+            products=[]
+
+        return  render(
+            request,
+            'products/index.html',
+            {'categories':categories,'products':products}
+            )
 
 
 def login(request):
