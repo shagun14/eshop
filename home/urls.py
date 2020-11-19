@@ -3,11 +3,12 @@
 
 from django.urls import path,include
 from . import views
-
+#from .views import index,register
+from  .views import Login,Register,Index
 
 urlpatterns = [
-    path('', views.index.as_view(),name='index_all'),
-    path('<str:parent_or_child>/<int:pk>',views.index.as_view(),name='index'),
-    path('login',views.login,name='login'),
-    path('register',views.register,name='register')
+    path('', Index.as_view(),name='index_all'),
+    path('<str:parent_or_child>/<int:pk>',Index.as_view(),name='index'),
+    path('login',Login.as_view(),name='login'),
+    path('register',Register.as_view(),name='register')
 ]
