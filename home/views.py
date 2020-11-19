@@ -10,11 +10,18 @@ from django.views import View
 class Index(View):
     def post(self, request):
         product=request.POST.get('product')
+        remove=request.POST.get('remove')
         cart = request.session.get('cart')
         if cart:
             quantity = cart.get(product)
             if quantity:
-                cart[product] = quantity+1
+                if remove:
+                    if quantity<=1:
+                        cart.pop(product)
+                    else:
+                        cart[product] = quantity-1
+                else:
+                    cart[product] = quantity+1
             else:
                 cart[product] = 1
         else:
@@ -26,6 +33,10 @@ class Index(View):
         return redirect('index_all')
 
     def get(self,request,parent_or_child=None,pk=None):
+        cart = request.session.get('cart')
+        if not cart:
+            request.session['cart'] = {}
+            
         categories=Category.objects.filter(parent=None)
 
         if parent_or_child is None:
