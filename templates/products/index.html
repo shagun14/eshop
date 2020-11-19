@@ -1,4 +1,5 @@
 {% load static %}
+{% load cart %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -232,11 +233,28 @@
   <div class="card-body">
     <h5 class="card-title">{{ product.name}}</h5>
     <p class="card-text"><b>{{ product.price}}</b></p>
-    <form action="/" method="POST"></form>
+    
+   </div>
+    <div class="card-footer no-gutters">
+
+    {% if product|is_in_cart:request.session.cart %}
+    <div class="row" >
+        <input type="submit" value=" - " class="col-2 btn btn-block btn-secondary">
+        <div class="text-center col">{{product|cart_quantity:request.session.cart}} in cart </div>
+        <input type="submit" value=" + " class="col-2 btn btn-block btn-secondary">
+  
+  
+    </div>
+    {% else %}
+    <form action="/" method="POST" class="btn-block">
     {% csrf_token %}
     <input hidden  type="text" name='product' value={{product.id}}>
-    <input type="submit" class="btn btn-light border btn-sm" value="Add To Cart"> 
-  </div>
+    <input type="submit" class="btn btn-light border form-control" value="Add To Cart"> 
+</form>
+{% endif %}
+  
+  
+</div>
 </div>
 
 {% endfor %}
