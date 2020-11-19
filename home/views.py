@@ -43,6 +43,8 @@ def validateCustomer(customer):
         err_msg = "Name Required!"
     elif (not customer.phone):
         err_msg = "Phone No. required"
+    elif not customer.validatePhone():
+        err_msg="Enter valid Phone no."
     elif len(customer.phone) < 10:
         err_msg = "Phone No. must have 10 digits"
     elif not customer.validateEmail():
@@ -54,13 +56,13 @@ def validateCustomer(customer):
     elif customer.doExists():
         err_msg = 'Email Address Already registered..'
     return  err_msg
+
 def registerUser(request):
     postData = request.POST
     name = postData.get('name')
     phone = postData.get('phone')
     email = postData.get('email')
     password = postData.get('password')
-
     # validation
     value = {'name': name, 'phone': phone, 'email': email}
     customer = Customer(name=name, phone=phone, email=email, password=password)
@@ -96,9 +98,6 @@ def login(request):
                 return render(request,'products/index.html')
             else:
                 err_msg='Email or Password invalid'
-
         else:
-            err_msg='Email or Password invalidd'
+            err_msg='Email or Password invalid'
         return render(request,'products/login.html',{'error':err_msg})
-
-

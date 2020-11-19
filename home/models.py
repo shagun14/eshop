@@ -29,10 +29,6 @@ class SubCategory(Node):
         proxy=True
 
 
-
-
-
-
 class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField(default=0)
@@ -79,3 +75,12 @@ class Customer(models.Model):
         except ValidationError:
             return False
 
+
+    def validatePhone(self):
+            phone = self.phone
+            from django.core.exceptions import ValidationError
+            try:
+                int(phone)
+                return True
+            except (ValueError, TypeError,ValidationError):
+                return False
