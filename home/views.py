@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.views import View
 
+
 class Index(View):
     def post(self, request):
         product=request.POST.get('product')
@@ -16,7 +17,7 @@ class Index(View):
             quantity = cart.get(product)
             if quantity:
                 if remove:
-                    if quantity<=1:
+                    if quantity <= 1:
                         cart.pop(product)
                     else:
                         cart[product] = quantity-1
@@ -29,14 +30,14 @@ class Index(View):
             cart[product] = 1
 
         request.session['cart'] = cart
-        print('cart' ,request.session['cart'])
+        #print('cart' ,request.session['cart'])
         return redirect('index_all')
 
     def get(self,request,parent_or_child=None,pk=None):
         cart = request.session.get('cart')
+        #email=request.session.get('email')
         if not cart:
             request.session['cart'] = {}
-            
         categories=Category.objects.filter(parent=None)
 
         if parent_or_child is None:
@@ -55,7 +56,8 @@ class Index(View):
 
         else:
             products=[]
-        print('you are : ',request.session.get('email'))
+        #print('you are : ', request.session.get('email'))
+        #print(email)
         return render(
             request,
             'products/index.html',
@@ -109,27 +111,40 @@ class Register(View):
 
 
 class Login(View):
-    def get(self,request):
+    def get(self, request):
         return render(request, 'products/login.html')
 
-    def post(self,request):
+    def post(self, request):
 
-        email=request.POST.get('email')
-        password=request.POST.get('password')
-        customer=Customer.get_customer_by_email(email)
-        print("email ", email)
-        err_msg=None
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        customer = Customer.get_customer_by_email(email)
+        #print("email ", email)
+        err_msg = None
         if customer:
-            flag = check_password(password,customer.password)
+            flag = check_password(password, customer.password)
             if flag:
                 request.session['customer'] = customer.id
-                
+                request.session['email'] = customer.email
                 return redirect('index_all')
             else:
-                err_msg='Email or Password invalid'
+                err_msg = 'Email or Password invalid'
         else:
-            err_msg='Email or Password invalid'
-        print('you are : ',request.session.get('email'))
-        return render(request,'products/login.html',{'error':err_msg})
+            err_msg = 'Email or Password invalid'
+        #print('you are : ',request.session.get('email'))
+        return render(request, 'products/login.html', {'error': err_msg})
 
+
+
+
+def logout(request):
+    request.session.clear()
+    return redirect('login')
+
+
+class Cart(View):
+    def get(self, request):
+        ids=list(request.session.get('cart').keys())
+        products=Product.get_products_by_id(ids)
+        return render(request, 'products/cart.html',{'products': products})
 

@@ -42,6 +42,10 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def get_products_by_id(ids):
+        return Product.objects.filter(id__in =ids)
+
 class Customer(models.Model):
     name =models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
