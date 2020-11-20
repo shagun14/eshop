@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render, redirect
-from .models import Category,SubCategory,Product,Customer
+from .models import Category,SubCategory,Product,Customer,Order
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.views import View
@@ -111,8 +111,27 @@ class Register(View):
 
 
 class Login(View):
-    def get(self, request):
-        return render(request, 'products/login.html')
+    def get(self, request, parent_or_child=None,pk=None):
+        categories=Category.objects.filter(parent=None)
+
+        if parent_or_child is None:
+            products = Product.objects.all()
+        elif parent_or_child == 'child':
+            sub_cat = SubCategory.objects.get(pk=pk)
+            products = sub_cat.product_set.all()
+
+        elif parent_or_child == 'parent':
+            products = []
+            sub_cats = Category.objects.get(pk=pk).children.all()
+
+            for sub_cat in sub_cats:
+                prds = sub_cat.product_set.all()
+                products += prds
+
+        else:
+            products=[]
+        return render(request, 'products/login.html',{'categories':categories,'products':products}
+            )
 
     def post(self, request):
 
@@ -148,3 +167,24 @@ class Cart(View):
         products=Product.get_products_by_id(ids)
         return render(request, 'products/cart.html',{'products': products})
 
+class CheckOut(View):
+    def post(self , request):
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        customer = request.session.get('customer')
+        cart = request.session.get('cart')
+        products = Product.get_products_by_id(list(cart.keys()))
+        print(address, phone, customer, cart, products)
+
+        for product in products:
+            print(cart.get(str(product.id)))
+            order = Order(customer=Customer(id=customer),
+                          product=product,
+                          price=product.price,
+                          address=address,
+                          phone=phone,
+                          quantity=cart.get(str(product.id)))
+            order.save()
+        request.session['cart'] = {}
+
+        return redirect('cart')
