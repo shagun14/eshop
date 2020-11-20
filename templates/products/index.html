@@ -1,5 +1,6 @@
 {% load static %}
 {% load cart %}
+{% load custom_filter %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -237,7 +238,7 @@
   <img src="{{ product.image.url }}" class="card-img-top" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{ product.name}}</h5>
-    <p class="card-text"><b>{{ product.price}}</b></p>
+    <p class="card-text"><b>{{ product.price|currency}}</b></p>
     
    </div>
     <div class="card-footer no-gutters">

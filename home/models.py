@@ -1,7 +1,7 @@
 
 from django.db import models
 from .managers import CategoryManager,SubCategoryManager
-import  re
+import  re,datetime
 class Node(models.Model):
     name=models.CharField(max_length=150)
     parent=models.ForeignKey(
@@ -88,3 +88,14 @@ class Customer(models.Model):
                 return True
             except (ValueError, TypeError,ValidationError):
                 return False
+
+
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    address = models.CharField(max_length=50, default='', blank=True)
+    phone = models.CharField(max_length=50, default='', blank=True)
+    quantity = models.IntegerField(default=1)
+    price = models.IntegerField()
+    date = models.DateField(default=datetime.datetime.today)
+

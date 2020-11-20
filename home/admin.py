@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product,Category,SubCategory,Customer
+from .models import Product,Category,SubCategory,Customer,Order
 
 
 
@@ -46,3 +46,5 @@ class SubCategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(SubCategory,SubCategoryAdmin)
 admin.site.register(Customer)
+admin.site.register(Order)
+
