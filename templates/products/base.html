@@ -94,7 +94,12 @@
                             <li><a href="my-account.html">My Account</a></li>
                             <li><a href="#">Our location</a></li>
                             <li><a href="#">Contact Us</a></li>
+                            {% if request.session.customer%}
+                            <li><a href="#">Logout</a></li>
+                            {% else %}
                             <li><a href="{% url 'login' %}">Log in/Register</a></li>
+                            {% endif %}
+                            
                         </ul>
                     </div>
                 </div>

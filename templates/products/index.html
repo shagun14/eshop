@@ -95,7 +95,11 @@
                             <li><a href="my-account.html">My Account</a></li>
                             <li><a href="#">Our location</a></li>
                             <li><a href="#">Contact Us</a></li>
+                            {% if request.session.customer%}
+                            <li><a href="#">Logout</a></li>
+                            {% else %}
                             <li><a href="{% url 'login' %}">Log in/Register</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -228,7 +232,7 @@
 
 <div class="row">
 {% for product in products %}
- <div class="card mx-auto mb-3" style="width: 18rem;">
+ <div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
   <img src="{{ product.image.url }}" class="card-img-top" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{ product.name}}</h5>
@@ -239,7 +243,7 @@
 
     {% if product|is_in_cart:request.session.cart %}
     <div class="row no-gutters" >
-        <form action="/" class="col-2 " method="post">
+        <form action="/#{{product.id}}" class="col-2 " method="post">
             {% csrf_token %}
             <input hidden type="text" name='product' value='{{product.id}}'>
             <input hidden type="text" name='remove' value='True'>
@@ -255,7 +259,7 @@
   
     </div>
     {% else %}
-    <form action="/" method="POST" class="btn-block">
+    <form action="/#{{product.id}}" method="POST" class="btn-block">
     {% csrf_token %}
     <input hidden  type="text" name='product' value={{product.id}}>
     <input type="submit" class="btn btn-light border form-control" value="Add To Cart"> 

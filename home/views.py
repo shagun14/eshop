@@ -117,17 +117,19 @@ class Login(View):
         email=request.POST.get('email')
         password=request.POST.get('password')
         customer=Customer.get_customer_by_email(email)
+        print("email ", email)
         err_msg=None
         if customer:
             flag = check_password(password,customer.password)
             if flag:
-                request.session['customer_id'] = customer.id
-                request.session['customer_email'] = customer.email
-                return render(request,'products/index.html')
+                request.session['customer'] = customer.id
+                
+                return redirect('index_all')
             else:
                 err_msg='Email or Password invalid'
         else:
             err_msg='Email or Password invalid'
+        print('you are : ',request.session.get('email'))
         return render(request,'products/login.html',{'error':err_msg})
 
 
