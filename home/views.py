@@ -1,12 +1,14 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponseRedirect
 from .models import Category,SubCategory,Product,Customer,Order
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.views import View
 from django.db.models import Q
+from home.middlewares.auth import auth_middleware
+from django.utils.decorators import method_decorator
 
 class Index(View):
     def post(self, request):
@@ -112,6 +114,7 @@ class Register(View):
 
 class Login(View):
     def get(self, request, parent_or_child=None,pk=None):
+        Login.return_url = request.GET.get('return_url')
         categories=Category.objects.filter(parent=None)
 
         if parent_or_child is None:
@@ -145,7 +148,11 @@ class Login(View):
             if flag:
                 request.session['customer'] = customer.id
                 request.session['email'] = customer.email
-                return redirect('index_all')
+                if Login.return_url:
+                    return HttpResponseRedirect(Login.return_url)
+                else:
+                    Login.return_url = None
+                    return redirect('index_all')
             else:
                 err_msg = 'Email or Password invalid'
         else:
