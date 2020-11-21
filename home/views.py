@@ -6,7 +6,7 @@ from .models import Category,SubCategory,Product,Customer,Order
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.views import View
-
+from django.db.models import Q
 
 class Index(View):
     def post(self, request):
@@ -188,3 +188,14 @@ class CheckOut(View):
         request.session['cart'] = {}
 
         return redirect('cart')
+
+
+class Search(View):
+    
+    def get(self,request):
+        kw = self.request.GET.get('search')
+        results = Product.objects.filter(Q(name__icontains=kw) | Q(description__icontains=kw))
+        context={}
+        context['results'] = results
+
+        return render(request, 'products/search.html',context)       

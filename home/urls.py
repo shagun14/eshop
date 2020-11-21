@@ -3,8 +3,7 @@
 
 from django.urls import path,include
 from . import views
-#from .views import index,register
-from  .views import Login,Register,Index,Cart,CheckOut
+from  .views import Login,Register,Index,Cart,CheckOut,Search
 from .views import logout
 urlpatterns = [
     path('', Index.as_view(),name='index_all'),
@@ -13,5 +12,7 @@ urlpatterns = [
     path('register',Register.as_view(),name='register'),
     path('logout',logout,name='logout'),
     path('cart',Cart.as_view(),name='cart'),
-    path('check-out',CheckOut.as_view(),name='checkout')
+    
+    path('check-out',CheckOut.as_view(),name='checkout'),
+    path('search',Search.as_view(),name='search'),
 ]
