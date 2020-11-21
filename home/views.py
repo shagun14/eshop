@@ -199,3 +199,37 @@ class Search(View):
         context['results'] = results
 
         return render(request, 'products/search.html',context)       
+
+
+class OrderView(View):
+
+    def post(self, request):
+        product=request.POST.get('product')
+        remove=request.POST.get('remove')
+        cart = request.session.get('cart')
+        if cart:
+            quantity = cart.get(product)
+            if quantity:
+                if remove:
+                    if quantity <= 1:
+                        cart.pop(product)
+                    else:
+                        cart[product] = quantity-1
+                else:
+                    cart[product] = quantity+1
+            else:
+                cart[product] = 1
+        else:
+            cart = {}
+            cart[product] = 1
+
+        request.session['cart'] = cart
+        #print('cart' ,request.session['cart'])
+        return redirect('search')
+
+    def get(self , request ):
+
+        customer = request.session.get('customer')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request , 'products/orders.html'  , {'orders' : orders})        

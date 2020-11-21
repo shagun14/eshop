@@ -96,7 +96,12 @@
                             <li><a href="my-account.html">My Account</a></li>
                             <li><a href="#">Our location</a></li>
                             <li><a href="#">Contact Us</a></li>
-                            <li><a href="/cart">cart</a></li>
+                            <li><a href="/cart">cart
+                                <span class="badge badge-info">{{request.session.cart.keys|length}}</span>
+                                <span class="sr-only">(current)</span>
+                                
+                            </a></li>
+                            <li><a href="/orders">order</a></li>
                             {% if request.session.customer%}
                             <li><a href="{% url 'logout' %}">Logout</a></li>
                             {% else %}

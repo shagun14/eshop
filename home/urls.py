@@ -3,7 +3,7 @@
 
 from django.urls import path,include
 from . import views
-from  .views import Login,Register,Index,Cart,CheckOut,Search
+from .views import Login,Register,Index,Cart,CheckOut,Search,OrderView
 from .views import logout
 urlpatterns = [
     path('', Index.as_view(),name='index_all'),
@@ -15,4 +15,5 @@ urlpatterns = [
     
     path('check-out',CheckOut.as_view(),name='checkout'),
     path('search',Search.as_view(),name='search'),
+    path('orders', OrderView.as_view(), name='orders'),
 ]
