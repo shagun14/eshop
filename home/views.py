@@ -191,11 +191,35 @@ class CheckOut(View):
 
 
 class Search(View):
-    
+
+    def post(self, request):
+        product=request.POST.get('product')
+        remove=request.POST.get('remove')
+        cart = request.session.get('cart')
+        if cart:
+            quantity = cart.get(product)
+            if quantity:
+                if remove:
+                    if quantity <= 1:
+                        cart.pop(product)
+                    else:
+                        cart[product] = quantity-1
+                else:
+                    cart[product] = quantity+1
+            else:
+                cart[product] = 1
+        else:
+            cart = {}
+            cart[product] = 1
+
+        request.session['cart'] = cart
+        #print('cart' ,request.session['cart'])
+        return redirect('search')
+
     def get(self,request):
         kw = self.request.GET.get('search')
-        results = Product.objects.filter(Q(name__icontains=kw) | Q(description__icontains=kw))
+        products = Product.objects.filter(Q(name__icontains=kw) | Q(description__icontains=kw))
         context={}
-        context['results'] = results
+        context['products'] = products
 
         return render(request, 'products/search.html',context)       

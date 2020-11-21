@@ -12,7 +12,6 @@ urlpatterns = [
     path('register',Register.as_view(),name='register'),
     path('logout',logout,name='logout'),
     path('cart',Cart.as_view(),name='cart'),
-    
     path('check-out',CheckOut.as_view(),name='checkout'),
     path('search',Search.as_view(),name='search'),
 ]
