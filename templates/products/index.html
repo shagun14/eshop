@@ -248,7 +248,7 @@
  <div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
   <img src="{{ product.image.url }}" class="card-img-top" alt="Card image cap">
   <div class="card-body">
-    <h5 class="card-title">{{ product.name}}</h5>
+    <a  href="{% url 'detail' slug=product.slug %}" class="card-title"> {{ product.name}} </a>
     <p class="card-text"><b>{{ product.price|currency}}</b></p>
    </div>
     <div class="card-footer no-gutters">
@@ -271,7 +271,7 @@
   
     </div>
     {% else %}
-    <form action="/#{{product.id}}" method="POST" class="btn-block">
+    <form action="/#{{product.id}}d" method="POST" class="btn-block">
     {% csrf_token %}
     <input hidden  type="text" name='product' value={{product.id}}>
     <input type="submit" class="btn btn-light border form-control" value="Add To Cart"> 

@@ -170,6 +170,7 @@ def logout(request):
 
 class Cart(View):
     def get(self, request):
+        
         ids=list(request.session.get('cart').keys())
         products=Product.get_products_by_id(ids)
         return render(request, 'products/cart.html',{'products': products})
@@ -264,3 +265,11 @@ class OrderView(View):
         orders = Order.get_orders_by_customer(customer)
         print(orders)
         return render(request , 'products/orders.html'  , {'orders' : orders})        
+
+class Detail(View):
+    def get(self,request,slug):
+        #slug=self.request.GET.get('slug')
+        product=Product.objects.get(slug=slug)
+        context={}
+        context['product']=product
+        return render(request,'products/product_detail.html',context)

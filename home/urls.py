@@ -3,7 +3,7 @@
 
 from django.urls import path,include
 from . import views
-from .views import Login,Register,Index,Cart,CheckOut,Search,OrderView
+from .views import Login,Register,Index,Cart,CheckOut,Search,OrderView,Detail
 from .views import logout
 from .middlewares.auth import auth_middleware
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('check-out',CheckOut.as_view(),name='checkout'),
     path('search',Search.as_view(),name='search'),
     path('orders',auth_middleware(OrderView.as_view()), name='orders'),
+    path('product_detail/<slug:slug>/',Detail.as_view(),name='detail'),
 ]
